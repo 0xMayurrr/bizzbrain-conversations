@@ -250,4 +250,3 @@ export function ChatWindow({ onToggleMemory }: { onToggleMemory: () => void }) {
   );
 }
 
-export { Square };
