@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Mic, Send, Paperclip, Smile, Search, MoreVertical, Phone, Brain, Square } from "lucide-react";
+import { Mic, Send, Paperclip, Smile, Search, MoreVertical, Phone, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MessageBubble, TypingBubble } from "./MessageBubble";
 import { fallbackReply, scriptedReplies, seedMessages } from "./data";
