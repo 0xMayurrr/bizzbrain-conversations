@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ChatList } from "@/components/bizzbrain/ChatList";
 import { ChatWindow } from "@/components/bizzbrain/ChatWindow";
 import { MemoryPanel } from "@/components/bizzbrain/MemoryPanel";
+import { initialBusinessMemory } from "@/components/bizzbrain/data";
+import type { BusinessMemoryState } from "@/components/bizzbrain/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,13 +13,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "BizzBrain turns everyday WhatsApp-style chat in Tamil, Hindi or English into sales records, payment reminders and daily profit insights.",
+          "BizzBrain turns everyday WhatsApp-style chat and voice notes in Malayalam, Tamil, Hindi, or English into sales records, payment reminders and daily profit insights.",
       },
       { property: "og:title", content: "BizzBrain — Your Business. In Your Conversation." },
       {
         property: "og:description",
         content:
-          "Talk, and BizzBrain records the sale, remembers the due and answers your profit question — in the language you already speak.",
+          "Speak or drop voice notes, and BizzBrain records the sale, remembers the due, and answers your profit question — in Malayalam, Tamil, Hindi, or English.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const [activeThread, setActiveThread] = useState("bizzbrain");
   const [memoryOpen, setMemoryOpen] = useState(false);
+  const [businessMemory, setBusinessMemory] = useState<BusinessMemoryState>(initialBusinessMemory);
 
   return (
     <main className="h-screen w-full bg-background">
@@ -39,11 +42,15 @@ function Index() {
         </div>
 
         <div className="h-full min-w-0 flex-1">
-          <ChatWindow onToggleMemory={() => setMemoryOpen((v) => !v)} />
+          <ChatWindow
+            memory={businessMemory}
+            onUpdateMemory={setBusinessMemory}
+            onToggleMemory={() => setMemoryOpen((v) => !v)}
+          />
         </div>
 
         <div className="hidden h-full w-[320px] shrink-0 xl:block">
-          <MemoryPanel />
+          <MemoryPanel memory={businessMemory} />
         </div>
       </div>
 
@@ -56,7 +63,7 @@ function Index() {
             className="flex-1 bg-foreground/30"
           />
           <div className="h-full w-[320px] max-w-[88vw] animate-fade-up">
-            <MemoryPanel />
+            <MemoryPanel memory={businessMemory} />
           </div>
         </div>
       ) : null}
