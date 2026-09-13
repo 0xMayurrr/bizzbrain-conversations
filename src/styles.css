@@ -52,7 +52,7 @@
   --color-tick: var(--tick);
   --color-hairline: var(--hairline);
 
-  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", "Noto Sans Malayalam", "Noto Sans Tamil", "Noto Sans Devanagari", "Nirmala UI", ui-sans-serif, system-ui, sans-serif;
 
   --animate-bubble-in: bubble-in 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
   --animate-fade-up: fade-up 0.35s ease-out both;
