@@ -33,12 +33,16 @@ function Index() {
   const [memoryOpen, setMemoryOpen] = useState(false);
   const [businessMemory, setBusinessMemory] = useState<BusinessMemoryState>(initialBusinessMemory);
 
+  function handleNewChat() {
+    setActiveThread("bizzbrain");
+  }
+
   return (
     <main className="h-screen w-full bg-background">
       <h1 className="sr-only">BizzBrain — your business, inside your conversation</h1>
       <div className="mx-auto flex h-full max-w-[1600px] overflow-hidden border-x border-hairline bg-card shadow-sm">
         <div className="hidden h-full w-[300px] shrink-0 md:block lg:w-[340px]">
-          <ChatList activeId={activeThread} onSelect={setActiveThread} />
+          <ChatList activeId={activeThread} onSelect={setActiveThread} onNewChat={handleNewChat} />
         </div>
 
         <div className="h-full min-w-0 flex-1">
@@ -46,6 +50,7 @@ function Index() {
             memory={businessMemory}
             onUpdateMemory={setBusinessMemory}
             onToggleMemory={() => setMemoryOpen((v) => !v)}
+            onNewChat={handleNewChat}
           />
         </div>
 

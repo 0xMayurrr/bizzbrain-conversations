@@ -12,10 +12,15 @@ import {
   Sparkles,
   X,
   ShieldCheck,
+  Plus,
+  RotateCcw,
+  MessageSquarePlus,
+  FileText,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MessageBubble, TypingBubble } from "./MessageBubble";
-import { seedMessages } from "./data";
+import { seedMessages, initialBusinessMemory } from "./data";
 import type { BusinessMemoryState, Message, SupportedLanguage } from "./types";
 import {
   processVoiceTransaction,
@@ -44,9 +49,10 @@ interface ChatWindowProps {
   memory: BusinessMemoryState;
   onUpdateMemory: (updater: (prev: BusinessMemoryState) => BusinessMemoryState) => void;
   onToggleMemory: () => void;
+  onNewChat?: () => void;
 }
 
-export function ChatWindow({ memory, onUpdateMemory, onToggleMemory }: ChatWindowProps) {
+export function ChatWindow({ memory, onUpdateMemory, onToggleMemory, onNewChat }: ChatWindowProps) {
   const [messages, setMessages] = useState<Message[]>(seedMessages);
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState(false);
@@ -56,6 +62,53 @@ export function ChatWindow({ memory, onUpdateMemory, onToggleMemory }: ChatWindo
   const [selectedLang, setSelectedLang] = useState<SupportedLanguage>("Malayalam");
   const [showPresetsBar, setShowPresetsBar] = useState(true);
   const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+
+  /**
+   * Reset conversation and memory for a clean demo
+   */
+  function handleStartNewChat(mode: "clean" | "seed" = "clean") {
+    setShowMoreMenu(false);
+    if (mode === "clean") {
+      setMessages([
+        {
+          id: `b-welcome-${Date.now()}`,
+          from: "bot",
+          time: nowLabel(),
+          text: "👋 *Namaskaram!* Fresh BizzBrain demo session started.\n\nType or speak in **Malayalam, Tamil, Hindi, or English** to test live sales entry, inventory checks, menu photo OCR, or daily profit statements!",
+          bullets: [
+            "🎤 Voice Note: 'Innu 60 chaya vittu, onninu 15 roopa'",
+            "📸 Menu OCR: Drag & drop menu photo or tap 📎 attachment",
+            "📦 Stock Query: 'Sugar stock kitna bacha hai?'",
+            "📄 GST & Reports: 'Close shop & send daily report'",
+          ],
+        },
+      ]);
+      onUpdateMemory(() => ({
+        businessName: "Grand Kerala Bakery & Cafe",
+        location: "Kochi, Kerala",
+        gstin: "32BBBBB1111B2Z6",
+        gstStatus: "Verified · Active",
+        todaySalesTotal: 0,
+        todayTransactionsCount: 0,
+        salesLedger: [],
+        duesOutstandingTotal: 0,
+        duesList: [],
+        inventory: [
+          { item: "Tea Powder", quantity: "15 kg", status: "ok" },
+          { item: "Sugar", quantity: "4 kg", status: "low" },
+          { item: "Milk", quantity: "20 L", status: "ok" },
+          { item: "Samosa Base", quantity: "50 pcs", status: "ok" },
+        ],
+        menuCardExtractedCount: 0,
+        menuItems: [],
+      }));
+    } else {
+      setMessages(seedMessages);
+      onUpdateMemory(() => initialBusinessMemory);
+    }
+    onNewChat?.();
+  }
 
   const endRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -463,7 +516,17 @@ export function ChatWindow({ memory, onUpdateMemory, onToggleMemory }: ChatWindo
           </p>
         </div>
 
-        <div className="flex items-center gap-1 text-brand-foreground/85">
+        <div className="flex items-center gap-1.5 text-brand-foreground/85">
+          <button
+            type="button"
+            onClick={() => handleStartNewChat("clean")}
+            title="Start New Chat (Fresh Demo)"
+            className="flex items-center gap-1.5 rounded-full bg-leaf px-3 py-1.5 text-xs font-semibold text-leaf-foreground transition-all hover:bg-leaf/90 active:scale-95 shadow-sm cursor-pointer"
+          >
+            <Plus className="size-3.5" />
+            <span>New Chat</span>
+          </button>
+
           <button
             type="button"
             onClick={onToggleMemory}
@@ -489,14 +552,68 @@ export function ChatWindow({ memory, onUpdateMemory, onToggleMemory }: ChatWindo
           >
             <Search className="size-[18px]" />
           </button>
-          <button
-            type="button"
-            title="More Options"
-            aria-label="More options"
-            className="rounded-full p-2 transition-colors hover:bg-brand-foreground/15 cursor-pointer"
-          >
-            <MoreVertical className="size-[18px]" />
-          </button>
+
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowMoreMenu((v) => !v)}
+              title="More Options"
+              aria-label="More options"
+              className="rounded-full p-2 transition-colors hover:bg-brand-foreground/15 cursor-pointer"
+            >
+              <MoreVertical className="size-[18px]" />
+            </button>
+
+            {showMoreMenu ? (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowMoreMenu(false)}
+                />
+                <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-xl border border-hairline bg-popover p-1.5 shadow-2xl animate-in fade-in zoom-in-95">
+                  <button
+                    type="button"
+                    onClick={() => handleStartNewChat("clean")}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground hover:bg-accent cursor-pointer"
+                  >
+                    <Plus className="size-4 text-leaf" />
+                    <span>New Chat (Fresh Clean Slate)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleStartNewChat("seed")}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground hover:bg-accent cursor-pointer"
+                  >
+                    <RotateCcw className="size-4 text-teal" />
+                    <span>Reload Sample Seed Demo</span>
+                  </button>
+                  <div className="my-1 border-t border-hairline" />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowMoreMenu(false);
+                      setReportModalOpen(true);
+                    }}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground hover:bg-accent cursor-pointer"
+                  >
+                    <FileText className="size-4 text-amber-500" />
+                    <span>View Daily Report Statement</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowMoreMenu(false);
+                      onToggleMemory();
+                    }}
+                    className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-foreground hover:bg-accent cursor-pointer"
+                  >
+                    <Brain className="size-4 text-primary" />
+                    <span>Toggle Business Memory</span>
+                  </button>
+                </div>
+              </>
+            ) : null}
+          </div>
         </div>
       </header>
 

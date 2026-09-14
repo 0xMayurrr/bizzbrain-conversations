@@ -11,9 +11,11 @@ const accentClass: Record<string, string> = {
 export function ChatList({
   activeId,
   onSelect,
+  onNewChat,
 }: {
   activeId: string;
   onSelect: (id: string) => void;
+  onNewChat?: () => void;
 }) {
   return (
     <aside className="flex h-full w-full flex-col border-r border-hairline bg-panel">
@@ -30,8 +32,10 @@ export function ChatList({
         <div className="flex items-center gap-1 text-brand-foreground/80">
           <button
             type="button"
+            onClick={onNewChat}
+            title="Start New Chat (Fresh Demo)"
             aria-label="New chat"
-            className="rounded-full p-2 transition-colors hover:bg-brand-foreground/10"
+            className="rounded-full p-2 transition-colors hover:bg-brand-foreground/10 cursor-pointer"
           >
             <MessageSquarePlus className="size-[18px]" />
           </button>
