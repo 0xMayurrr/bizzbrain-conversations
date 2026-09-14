@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MessageBubble, TypingBubble } from "./MessageBubble";
-import { seedMessages, initialBusinessMemory } from "./data";
+import { seedMessages, initialBusinessMemory, cleanBusinessMemory, cleanSeedMessages } from "./data";
 import type { BusinessMemoryState, Message, SupportedLanguage } from "./types";
 import {
   processVoiceTransaction,
@@ -76,33 +76,9 @@ export function ChatWindow({ memory, onUpdateMemory, onToggleMemory, onNewChat }
           from: "bot",
           time: nowLabel(),
           text: "👋 *Namaskaram!* Fresh BizzBrain demo session started.\n\nType or speak in **Malayalam, Tamil, Hindi, or English** to test live sales entry, inventory checks, menu photo OCR, or daily profit statements!",
-          bullets: [
-            "🎤 Voice Note: 'Innu 60 chaya vittu, onninu 15 roopa'",
-            "📸 Menu OCR: Drag & drop menu photo or tap 📎 attachment",
-            "📦 Stock Query: 'Sugar stock kitna bacha hai?'",
-            "📄 GST & Reports: 'Close shop & send daily report'",
-          ],
         },
       ]);
-      onUpdateMemory(() => ({
-        businessName: "Grand Kerala Bakery & Cafe",
-        location: "Kochi, Kerala",
-        gstin: "32BBBBB1111B2Z6",
-        gstStatus: "Verified · Active",
-        todaySalesTotal: 0,
-        todayTransactionsCount: 0,
-        salesLedger: [],
-        duesOutstandingTotal: 0,
-        duesList: [],
-        inventory: [
-          { item: "Tea Powder", quantity: "15 kg", status: "ok" },
-          { item: "Sugar", quantity: "4 kg", status: "low" },
-          { item: "Milk", quantity: "20 L", status: "ok" },
-          { item: "Samosa Base", quantity: "50 pcs", status: "ok" },
-        ],
-        menuCardExtractedCount: 0,
-        menuItems: [],
-      }));
+      onUpdateMemory(() => cleanBusinessMemory);
     } else {
       setMessages(seedMessages);
       onUpdateMemory(() => initialBusinessMemory);

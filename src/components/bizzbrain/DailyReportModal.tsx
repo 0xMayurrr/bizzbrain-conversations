@@ -9,16 +9,16 @@ interface DailyReportModalProps {
 }
 
 export function downloadReportHtml(memory: BusinessMemoryState, dateStr: string = "13 Sep 2026") {
-  const marginPct = memory.today.revenue > 0
-    ? Math.round((memory.today.profit / memory.today.revenue) * 100)
-    : 0;
+  const rev = memory?.today?.revenue ?? 0;
+  const prof = memory?.today?.profit ?? 0;
+  const marginPct = rev > 0 ? Math.round((prof / rev) * 100) : 0;
 
   const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8"/>
-  <title>BizzBrain Daily Closing Statement — ${memory.profile.name} — ${dateStr}</title>
+  <title>BizzBrain Daily Closing Statement — ${memory?.profile?.name || "BizzBrain Store"} — ${dateStr}</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -252,9 +252,9 @@ export function downloadReportHtml(memory: BusinessMemoryState, dateStr: string 
 export function DailyReportModal({ isOpen, onClose, memory, dateStr = "13 Sep 2026" }: DailyReportModalProps) {
   if (!isOpen) return null;
 
-  const marginPct = memory.today.revenue > 0
-    ? Math.round((memory.today.profit / memory.today.revenue) * 100)
-    : 0;
+  const rev = memory?.today?.revenue ?? 0;
+  const prof = memory?.today?.profit ?? 0;
+  const marginPct = rev > 0 ? Math.round((prof / rev) * 100) : 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4 backdrop-blur-xs animate-fade-up">
@@ -266,9 +266,9 @@ export function DailyReportModal({ isOpen, onClose, memory, dateStr = "13 Sep 20
               <FileText className="size-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold">{memory.profile.name} — Closing Statement</h2>
+              <h2 className="text-base font-bold">{memory?.profile?.name || "BizzBrain Store"} — Closing Statement</h2>
               <p className="text-xs text-brand-foreground/80">
-                {memory.profile.category} · {memory.profile.location} · {dateStr}
+                {memory?.profile?.category || "Store"} · {memory?.profile?.location || "India"} · {dateStr}
               </p>
             </div>
           </div>

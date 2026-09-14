@@ -186,12 +186,12 @@ export function MemoryPanel({ memory }: { memory: BusinessMemoryState }) {
       </Section>
 
       {/* Today at a glance */}
-      <Section icon={TrendingUp} title="Today at a glance" badge={`+${memory.today.entriesCount} entries`}>
+      <Section icon={TrendingUp} title="Today at a glance" badge={`+${memory?.today?.entriesCount ?? 0} entries`}>
         <div className="grid grid-cols-3 gap-2">
           {[
-            { k: "Revenue", v: `₹${memory.today.revenue.toLocaleString("en-IN")}` },
-            { k: "Expenses", v: `₹${memory.today.expenses.toLocaleString("en-IN")}` },
-            { k: "Profit", v: `₹${memory.today.profit.toLocaleString("en-IN")}` },
+            { k: "Revenue", v: `₹${(memory?.today?.revenue ?? 0).toLocaleString("en-IN")}` },
+            { k: "Expenses", v: `₹${(memory?.today?.expenses ?? 0).toLocaleString("en-IN")}` },
+            { k: "Profit", v: `₹${(memory?.today?.profit ?? 0).toLocaleString("en-IN")}` },
           ].map((s) => (
             <div key={s.k} className="rounded-lg bg-muted px-2 py-2">
               <p className="text-[10.5px] text-muted-foreground">{s.k}</p>
@@ -205,9 +205,9 @@ export function MemoryPanel({ memory }: { memory: BusinessMemoryState }) {
       </Section>
 
       {/* Pending payments */}
-      <Section icon={CalendarClock} title="Pending payments" badge={`${memory.dues.length} active`}>
+      <Section icon={CalendarClock} title="Pending payments" badge={`${(memory?.dues ?? []).length} active`}>
         <ul className="space-y-2.5">
-          {memory.dues.map((p) => (
+          {(memory?.dues ?? []).map((p) => (
             <li key={p.id} className="flex items-start justify-between gap-2 border-b border-hairline/60 pb-2 last:border-none last:pb-0">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13px] font-medium text-foreground">{p.name}</p>
@@ -224,7 +224,7 @@ export function MemoryPanel({ memory }: { memory: BusinessMemoryState }) {
       {/* Top items today */}
       <Section icon={Package} title="Top items today">
         <div className="space-y-2.5">
-          {memory.topItems.map((i) => (
+          {(memory?.topItems ?? []).map((i) => (
             <div key={i.name}>
               <div className="flex justify-between text-[12.5px]">
                 <span className="font-medium text-foreground">{i.name}</span>

@@ -115,6 +115,46 @@ export const initialBusinessMemory: BusinessMemoryState = {
   ],
 };
 
+export const cleanBusinessMemory: BusinessMemoryState = {
+  profile: {
+    name: "Grand Kerala Bakery & Cafe",
+    category: "Bakery & Cafe",
+    location: "Kochi, Kerala",
+    closingTime: "10:00 PM",
+    gstin: "32BBBBB1111B2Z6",
+    gstFilingFrequency: "Monthly",
+  },
+  today: {
+    revenue: 0,
+    expenses: 0,
+    profit: 0,
+    entriesCount: 0,
+  },
+  dues: [],
+  topItems: [],
+  gstReminders: [
+    {
+      id: "gst-1",
+      filingName: "GSTR-3B",
+      period: "September 2026",
+      dueDate: "20 Sep 2026",
+      daysRemaining: 6,
+      status: "Due Soon",
+      estimatedTax: 0,
+    },
+  ],
+  menuCatalog: [],
+};
+
+export const cleanSeedMessages: Message[] = [
+  {
+    id: "m-welcome-clean",
+    from: "bot",
+    time: "Just now",
+    text: "👋 Namaskaram! Fresh BizzBrain demo session started.\n\nType or speak in Malayalam, Tamil, Hindi, or English to record sales, test menu card OCR, or manage your business ledger!",
+  },
+];
+
 export const seedMessages: Message[] = [
   {
     id: "m1",
